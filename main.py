@@ -161,7 +161,7 @@ def main(args, ITE=0):
 
     for _ite in range(args.start_iter, ITERATION):
         if not _ite == 0:
-            prune_by_percentile(args.prune_percent, resample=resample, reinit=reinit)
+            mask = prune_by_percentile(args.prune_percent,mask, resample=resample, reinit=reinit)
             if reinit:
                 model.apply(weight_init)
                 step = 0
@@ -299,9 +299,9 @@ def test(model, test_loader, criterion):
     return accuracy
 
 # Prune by Percentile module
-def prune_by_percentile(percent, resample=False, reinit=False,**kwargs):
+def prune_by_percentile(percent, mask,resample=False, reinit=False):
         global step
-        global mask
+
         global model
 
         # Calculate percentile value
@@ -323,6 +323,7 @@ def prune_by_percentile(percent, resample=False, reinit=False,**kwargs):
                 mask[step] = new_mask
                 step += 1
         step = 0
+        return mask
 
 # Function to make an empty mask of the same size as the model
 def make_mask(model, mask):
