@@ -21,7 +21,7 @@ import pickle
 
 # Custom Libraries
 import utils
-
+from half_cifar_loader import HALF_CIFAR10
 # Tensorboard initialization
 writer = SummaryWriter()
 
@@ -45,15 +45,15 @@ def main(args, ITE=0):
         testdataset = datasets.CIFAR10('../data', train=False, transform=transform)      
         from archs.cifar10 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
     elif args.dataset == "first_cifar_5":
-        traindataset = datasets.CIFAR10('/content/drive/My Drive/prune/data/first_cifar_5',\
+        traindataset = HALF_CIFAR10('/content/drive/My Drive/prune/data/first_cifar_5',\
                             train=True, download=False,transform=transform)
-        testdataset = datasets.CIFAR10('/content/drive/My Drive/prune/data/first_cifar_5', \
+        testdataset = HALF_CIFAR10('/content/drive/My Drive/prune/data/first_cifar_5', \
                             train=False, transform=transform)
         from archs.cifar5 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
     elif args.dataset == "last_cifar_5":
-        traindataset = datasets.CIFAR10('/content/drive/My Drive/prune/data/last_cifar_5',\
+        traindataset = HALF_CIFAR10('/content/drive/My Drive/prune/data/last_cifar_5',\
                             train=True, download=False,transform=transform)
-        testdataset = datasets.CIFAR10('/content/drive/My Drive/prune/data/last_cifar_5', \
+        testdataset = HALF_CIFAR10('/content/drive/My Drive/prune/data/last_cifar_5', \
                             train=False, transform=transform)
         from archs.cifar5 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
     elif args.dataset == "fashionmnist":
