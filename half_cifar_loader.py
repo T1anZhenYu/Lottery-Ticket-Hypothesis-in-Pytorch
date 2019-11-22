@@ -36,9 +36,10 @@ class HALF_CIFAR10(Dataset):
     def __init__(self, root, train=True, transform=None, target_transform=None,
                  download=False):
 
-        super(HALF_CIFAR10, self).__init__(root, transform=transform,
-                                      target_transform=target_transform)
-
+        self.transform = transform
+        self.target_transform = target_transform
+        self.download = download
+        self.root = root
         self.train = train  # training set or test set
 
         if self.train:
