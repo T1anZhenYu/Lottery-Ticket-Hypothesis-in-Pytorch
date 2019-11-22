@@ -332,7 +332,7 @@ def make_mask(model):
         if 'weight' in name:
             step = step + 1
     mask = [None]* step
-    print('in make mask:',mask.shape)
+    print('in make mask:',len(mask))
     step = 0
     for name, param in model.named_parameters(): 
         if 'weight' in name:
