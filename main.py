@@ -103,7 +103,7 @@ def main(args, ITE=0):
         init_model = torch.load(model_path)
         model.load_state_dict(init_model.state_dict())
         #load mask
-        assert os.path.isfile(args.mask_pah), "Error: no mask directory found!"
+        assert os.path.isfile(args.mask_path), "Error: no mask directory found!"
         with open(args.mask_pah, 'rb') as fp:
             mask = pickle.load(fp)
 
