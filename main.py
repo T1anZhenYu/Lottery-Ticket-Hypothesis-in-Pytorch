@@ -332,13 +332,14 @@ def make_mask(model):
         if 'weight' in name:
             step = step + 1
     mask = [None]* step
-    print('in make mask:',len(mask))
+
     step = 0
     for name, param in model.named_parameters(): 
         if 'weight' in name:
             tensor = param.data.cpu().numpy()
             mask[step] = np.ones_like(tensor)
             step = step + 1
+    print('in make mask:',len(mask))
     step = 0
 
 def original_initialization(mask_temp, initial_state_dict):
