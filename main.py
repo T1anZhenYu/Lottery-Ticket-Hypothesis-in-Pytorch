@@ -136,7 +136,7 @@ def main(args, ITE=0):
 
     # Making Initial Mask
     make_mask(model)
-
+    print("mask is:",mask.shape)
     # Optimizer and Loss
     optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
     criterion = nn.CrossEntropyLoss() # Default was F.nll_loss
