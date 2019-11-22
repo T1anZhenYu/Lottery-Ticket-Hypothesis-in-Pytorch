@@ -58,9 +58,9 @@ class HALF_CIFAR10(Dataset):
                     entry = pickle.load(f)
                 else:
                     entry = pickle.load(f, encoding='latin1')
-                self.data.append(entry['data'].astype(np.uint8))
+                self.data.append(entry['data'])
                 if 'labels' in entry:
-                    self.targets.extend(entry['labels'].astype(np.uint8))
+                    self.targets.extend(entry['labels'])
                 else:
                     self.targets.extend(entry['fine_labels'])
 
@@ -76,9 +76,11 @@ class HALF_CIFAR10(Dataset):
             tuple: (image, target) where target is index of the target class.
         """
         img, target = self.data[index], self.targets[index]
+        img = img.astype(np.uint8)
+        target = target.astype(np.uint8)
         print()
-        print('img type:',type(img))
-        print('img shape:',img.shape)
+        print('target type:',type(img))
+        print('target shape:',img.shape)
         print('train:',self.train)
         # doing this so that it is consistent with all other datasets
         # to return a PIL Image
