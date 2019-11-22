@@ -80,7 +80,7 @@ class HALF_CIFAR10(Dataset):
         target = target.astype(np.uint8)
         print()
         print('target type:',type(target))
-        print('target shape:',target.shape)
+        print('target',target)
         print('train:',self.train)
         # doing this so that it is consistent with all other datasets
         # to return a PIL Image
