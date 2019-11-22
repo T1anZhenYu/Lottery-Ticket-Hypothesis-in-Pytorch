@@ -85,7 +85,36 @@ def main(args, ITE=0):
     else:
         print("\nWrong Model choice\n")
         exit()
+    if args.freeze:
+        #load model
+        model_path = args.initial_weight_path
+        assert os.path.isfile(model_path), "Error: no checkpoint directory found!"
+        init_model = torch.load(model_path)
+        model.load_state_dict(init_model.state_dict())
+        #load mask
+        assert os.path.isfile(args.mask_pah), "Error: no mask directory found!"
+        with open(args.mask_pah, 'rb') as fp:
+            mask = pickle.load(fp)
 
+
+        #train the pruned network over new dataset
+        optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
+        criterion = nn.CrossEntropyLoss()  # Default was F.nll_loss
+        pbar = tqdm(range(args.end_iter))
+        best_accuracy = 0
+        for iter_ in pbar:
+            # Frequency for Testing
+            if iter_ % args.valid_freq == 0:
+                accuracy = test(model, test_loader, criterion)
+                if accuracy > best_accuracy:
+                    best_accuracy = accuracy
+            loss = train(model, train_loader, optimizer, criterion)
+            if iter_ % args.print_freq == 0:
+                pbar.set_description(
+                    f'Train Epoch: {iter_}/{args.end_iter} Loss: {loss:.6f} Accuracy: \
+                        {accuracy:.2f}% Best Accuracy: {best_accuracy:.2f}%')
+        print("stop training pruned network")
+        exit()
     # Weight Initialization
     model.apply(weight_init)
 
@@ -395,10 +424,21 @@ if __name__=="__main__":
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--prune_type", default="lt", type=str, help="lt | reinit")
     parser.add_argument("--gpu", default="0", type=str)
-    parser.add_argument("--dataset", default="mnist", type=str, help="mnist | cifar10 | fashionmnist | cifar100")
-    parser.add_argument("--arch_type", default="fc1", type=str, help="fc1 | lenet5 | alexnet | vgg16 | resnet18 | densenet121")
+    parser.add_argument("--dataset", default="mnist", type=str, \
+                        help="mnist | cifar10 | fashionmnist | cifar100")
+    parser.add_argument("--arch_type", default="fc1", type=str, \
+                        help="fc1 | lenet5 | alexnet | vgg16 | resnet18 | densenet121")
     parser.add_argument("--prune_percent", default=10, type=int, help="Pruning percent")
-    parser.add_argument("--prune_iterations", default=35, type=int, help="Pruning iterations count")
+    parser.add_argument("--prune_iterations", default=35, type=int,\
+                        help="Pruning iterations count")
+    parser.add_argument("--freeze", default=False,help=\
+        "If freeze is True, then stop pruning, using the pruned network to train")
+    parser.add_argument("--mask_path",type=str,\
+                        help="load mask")
+    parser.add_argument("--initial_weight_path",type=str,\
+                        help="load initial weight")
+
+
 
     
     args = parser.parse_args()
