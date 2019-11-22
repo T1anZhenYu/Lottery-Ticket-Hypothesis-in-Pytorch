@@ -82,7 +82,7 @@ class HALF_CIFAR10(Dataset):
         print('train:',self.train)
         # doing this so that it is consistent with all other datasets
         # to return a PIL Image
-        img = Image.fromarray(img)
+        img = Image.fromarray(img.astype(np.uint8))
 
         if self.transform is not None:
             img = self.transform(img)
