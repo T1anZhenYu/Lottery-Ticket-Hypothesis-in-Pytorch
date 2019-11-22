@@ -76,7 +76,7 @@ class HALF_CIFAR10(Dataset):
             tuple: (image, target) where target is index of the target class.
         """
         img, target = self.data[index], self.targets[index]
-        img = img.astype(np.uint16)
+        img = img.astype(np.uint8)
         target = target.astype(np.long)
         # print()
         # print('target type:',type(target))
