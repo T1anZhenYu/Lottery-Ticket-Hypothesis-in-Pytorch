@@ -418,7 +418,7 @@ if __name__=="__main__":
     parser.add_argument("--lr",default= 1.2e-3, type=float, help="Learning rate")
     parser.add_argument("--batch_size", default=60, type=int)
     parser.add_argument("--start_iter", default=0, type=int)
-    parser.add_argument("--end_iter", default=10, type=int)
+    parser.add_argument("--end_iter", default=100, type=int)
     parser.add_argument("--print_freq", default=1, type=int)
     parser.add_argument("--valid_freq", default=1, type=int)
     parser.add_argument("--resume", action="store_true")
@@ -429,7 +429,7 @@ if __name__=="__main__":
     parser.add_argument("--arch_type", default="fc1", type=str, \
                         help="fc1 | lenet5 | alexnet | vgg16 | resnet18 | densenet121")
     parser.add_argument("--prune_percent", default=10, type=int, help="Pruning percent")
-    parser.add_argument("--prune_iterations", default=3, type=int,\
+    parser.add_argument("--prune_iterations", default=35, type=int,\
                         help="Pruning iterations count")
     parser.add_argument("--freeze", default=False,help=\
         "If freeze is True, then stop pruning, using the pruned network to train")
