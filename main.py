@@ -104,7 +104,7 @@ def main(args, ITE=0):
         model.load_state_dict(init_model.state_dict())
         #load mask
         assert os.path.isfile(args.mask_path), "Error: no mask directory found!"
-        with open(args.mask_pah, 'rb') as fp:
+        with open(args.mask_path, 'rb') as fp:
             mask = pickle.load(fp)
 
 
