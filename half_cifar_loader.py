@@ -76,7 +76,9 @@ class HALF_CIFAR10(Dataset):
             tuple: (image, target) where target is index of the target class.
         """
         img, target = self.data[index], self.targets[index]
+        print()
         print('img:',type(img))
+        print('train:',self.train)
         # doing this so that it is consistent with all other datasets
         # to return a PIL Image
         img = Image.fromarray(img)
