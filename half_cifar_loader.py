@@ -58,9 +58,9 @@ class HALF_CIFAR10(Dataset):
                     entry = pickle.load(f)
                 else:
                     entry = pickle.load(f, encoding='latin1')
-                self.data.append(entry['data'])
+                self.data.append(entry['data'].astype(np.uint8))
                 if 'labels' in entry:
-                    self.targets.extend(entry['labels'])
+                    self.targets.extend(entry['labels'].astype(np.uint8))
                 else:
                     self.targets.extend(entry['fine_labels'])
 
@@ -82,7 +82,7 @@ class HALF_CIFAR10(Dataset):
         print('train:',self.train)
         # doing this so that it is consistent with all other datasets
         # to return a PIL Image
-        img = Image.fromarray(img.astype(np.uint8))
+        img = Image.fromarray(img)
 
         if self.transform is not None:
             img = self.transform(img)
