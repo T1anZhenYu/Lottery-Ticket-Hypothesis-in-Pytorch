@@ -135,7 +135,8 @@ def main(args, ITE=0):
     torch.save(model, f"{os.getcwd()}/saves/{args.arch_type}/{args.dataset}/initial_state_dict_{args.prune_type}.pth.tar")
 
     # Making Initial Mask
-    make_mask(model)
+    mask = []
+    mask = make_mask(model, mask)
     print()
     print("mask is:",len(mask))
     # Optimizer and Loss
@@ -324,9 +325,9 @@ def prune_by_percentile(percent, resample=False, reinit=False,**kwargs):
         step = 0
 
 # Function to make an empty mask of the same size as the model
-def make_mask(model):
+def make_mask(model, mask):
     global step
-    global mask
+
     step = 0
     for name, param in model.named_parameters(): 
         if 'weight' in name:
@@ -339,9 +340,9 @@ def make_mask(model):
             tensor = param.data.cpu().numpy()
             mask[step] = np.ones_like(tensor)
             step = step + 1
-    print('in make mask:',len(mask))
-    step = 0
 
+    step = 0
+    return mask
 def original_initialization(mask_temp, initial_state_dict):
     global model
     
