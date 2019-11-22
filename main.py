@@ -46,13 +46,13 @@ def main(args, ITE=0):
         from archs.cifar10 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
     elif args.dataset == "first_cifar_5":
         traindataset = datasets.CIFAR10('/content/drive/My Drive/prune/data/first_cifar_5',\
-                            train=True, download=True,transform=transform)
+                            train=True, download=False,transform=transform)
         testdataset = datasets.CIFAR10('/content/drive/My Drive/prune/data/first_cifar_5', \
                             train=False, transform=transform)
         from archs.cifar5 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
     elif args.dataset == "last_cifar_5":
         traindataset = datasets.CIFAR10('/content/drive/My Drive/prune/data/last_cifar_5',\
-                            train=True, download=True,transform=transform)
+                            train=True, download=False,transform=transform)
         testdataset = datasets.CIFAR10('/content/drive/My Drive/prune/data/last_cifar_5', \
                             train=False, transform=transform)
         from archs.cifar5 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
