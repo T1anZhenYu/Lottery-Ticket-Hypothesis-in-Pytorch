@@ -123,6 +123,7 @@ def main(args, ITE=0):
         # print(model.state_dict())
         optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
         criterion = nn.CrossEntropyLoss()  # Default was F.nll_loss
+
         pbar = tqdm(range(args.end_iter))
         best_accuracy = 0
         for iter_ in pbar:
@@ -241,8 +242,8 @@ def main(args, ITE=0):
         # Dumping mask
         utils.checkdir(f"{os.getcwd()}/dumps/lt/{args.arch_type}/{args.dataset}/")
         with open(f"{os.getcwd()}/dumps/lt/{args.arch_type}/{args.dataset}/{args.prune_type}_mask_{comp1}.pkl", 'wb') as fp:
-            # print("mask is :")
-            # print(mask[0])
+            print("mask is :")
+            print(mask[0])
             pickle.dump(mask, fp)
         
         # Making variables into 0
