@@ -370,6 +370,8 @@ def original_initialization(model,mask_temp, initial_state_dict):
         if "bias" in name:
             param.data = initial_state_dict[name]
     step = 0
+    print('model params:')
+    print(model.state_dict())
     return model
 # Function for Initialization
 def weight_init(m):
