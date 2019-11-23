@@ -116,7 +116,7 @@ def main(args, ITE=0):
         #train the pruned network over new dataset
         # print('before initialization, model params:')
         # print(model.state_dict())
-        original_initialization(mask, initial_state_dict)
+        model = original_initialization(model,mask, initial_state_dict)
         comp1 = utils.print_nonzeros(model)
         print('comp1:',comp1)
         # print('after initialization, model params:')
@@ -184,7 +184,7 @@ def main(args, ITE=0):
                         step = step + 1
                 step = 0
             else:
-                original_initialization(mask, initial_state_dict)
+                model = original_initialization(model,mask, initial_state_dict)
             optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-4)
         print(f"\n--- Pruning Level [{ITE}:{_ite}/{ITERATION}]: ---")
 
@@ -358,8 +358,8 @@ def make_mask(model, mask):
 
     step = 0
     return mask
-def original_initialization(mask_temp, initial_state_dict):
-    global model
+def original_initialization(model,mask_temp, initial_state_dict):
+
     
     step = 0
     for name, param in model.named_parameters(): 
@@ -370,7 +370,7 @@ def original_initialization(mask_temp, initial_state_dict):
         if "bias" in name:
             param.data = initial_state_dict[name]
     step = 0
-
+    return model
 # Function for Initialization
 def weight_init(m):
     '''
