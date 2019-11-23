@@ -102,8 +102,8 @@ def main(args, ITE=0):
         assert os.path.isfile(model_path), "Error: no checkpoint directory found!"
         init_model = torch.load(model_path)
         initial_state_dict = copy.deepcopy(init_model.state_dict())
-        print("in freeze, init_model:")
-        print(init_model.state_dict())
+        # print("in freeze, init_model:")
+        # print(init_model.state_dict())
         model.load_state_dict(init_model.state_dict())
         #load mask
         assert os.path.isfile(args.mask_path), "Error: no mask directory found!"
@@ -114,11 +114,11 @@ def main(args, ITE=0):
 
 
         #train the pruned network over new dataset
-        print('before initialization, model params:')
-        print(model.state_dict())
+        # print('before initialization, model params:')
+        # print(model.state_dict())
         original_initialization(mask, initial_state_dict)
-        print('after initialization, model params:')
-        print(model.state_dict())
+        # print('after initialization, model params:')
+        # print(model.state_dict())
         optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
         criterion = nn.CrossEntropyLoss()  # Default was F.nll_loss
         pbar = tqdm(range(args.end_iter))
@@ -141,8 +141,8 @@ def main(args, ITE=0):
 
     # Copying and Saving Initial State
     initial_state_dict = copy.deepcopy(model.state_dict())
-    print("initial state is :")
-    print(initial_state_dict)
+    # print("initial state is :")
+    # print(initial_state_dict)
     utils.checkdir(f"{os.getcwd()}/saves/{args.arch_type}/{args.dataset}/")
     torch.save(model, f"{os.getcwd()}/saves/{args.arch_type}/{args.dataset}/initial_state_dict_{args.prune_type}.pth.tar")
 
@@ -239,8 +239,8 @@ def main(args, ITE=0):
         # Dumping mask
         utils.checkdir(f"{os.getcwd()}/dumps/lt/{args.arch_type}/{args.dataset}/")
         with open(f"{os.getcwd()}/dumps/lt/{args.arch_type}/{args.dataset}/{args.prune_type}_mask_{comp1}.pkl", 'wb') as fp:
-            print("mask is :")
-            print(mask[0])
+            # print("mask is :")
+            # print(mask[0])
             pickle.dump(mask, fp)
         
         # Making variables into 0
