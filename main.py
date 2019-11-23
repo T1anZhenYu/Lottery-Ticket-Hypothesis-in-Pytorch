@@ -117,6 +117,8 @@ def main(args, ITE=0):
         # print('before initialization, model params:')
         # print(model.state_dict())
         original_initialization(mask, initial_state_dict)
+        comp1 = utils.print_nonzeros(model)
+        print('comp1:',comp1)
         # print('after initialization, model params:')
         # print(model.state_dict())
         optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
