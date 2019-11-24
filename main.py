@@ -125,7 +125,7 @@ def main(args, ITE=0):
         # print(model.state_dict())
         print('model parameters')
         print(model.parameters())
-        optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
+        optimizer = torch.optim.Adam(model.parameters(),lr=args.lr, weight_decay=1e-4)
         criterion = nn.CrossEntropyLoss()  # Default was F.nll_loss
 
         pbar = tqdm(range(args.end_epoch))
@@ -157,7 +157,7 @@ def main(args, ITE=0):
     mask = []
     mask = make_mask(model, mask)
     # Optimizer and Loss
-    optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
+    optimizer = torch.optim.Adam(model.parameters(),weight_decay=1e-4)
     criterion = nn.CrossEntropyLoss() # Default was F.nll_loss
 
     # Layer Looper
