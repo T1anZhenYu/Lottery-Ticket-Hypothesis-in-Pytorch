@@ -46,7 +46,7 @@ def main(args, ITE=0):
         from archs.cifar10 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
     elif args.dataset == "first_cifar_5":
         traindataset = HALF_CIFAR10('/content/drive/My Drive/prune/data/first_cifar_5',\
-                            train=True, download=False,transform=transform)
+                            train=True, download=True,transform=transform)
         testdataset = HALF_CIFAR10('/content/drive/My Drive/prune/data/first_cifar_5', \
                             train=False, transform=transform)
         from archs.cifar5 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
@@ -377,8 +377,8 @@ def original_initialization(model,mask_temp, initial_state_dict):
         if "bias" in name:
             param.data = initial_state_dict[name]
     step = 0
-    print('model params:')
-    print(model.state_dict())
+    # print('model params:')
+    # print(model.state_dict())
     return model
 # Function for Initialization
 def weight_init(m):
