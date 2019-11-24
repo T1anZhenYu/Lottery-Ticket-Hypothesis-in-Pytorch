@@ -286,6 +286,8 @@ def train(model, train_loader, optimizer, criterion):
         print(imgs)
         print('output:')
         print(output)
+        print('target:')
+        print(targets)
         train_loss = criterion(output, targets)
         train_loss.backward()
 
