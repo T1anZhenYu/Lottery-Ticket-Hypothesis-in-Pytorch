@@ -73,7 +73,7 @@ def main(args, ITE=0):
         exit()
 
     train_loader = torch.utils.data.DataLoader(traindataset,\
-        batch_size=args.batch_size, shuffle=True, num_workers=0,drop_last=False)
+        batch_size=args.batch_size, shuffle=False, num_workers=0,drop_last=False)
     #train_loader = cycle(train_loader)
     test_loader = torch.utils.data.DataLoader(testdataset, \
        batch_size=args.batch_size, shuffle=False, num_workers=0,drop_last=True)
@@ -282,6 +282,8 @@ def train(model, train_loader, optimizer, criterion):
         #imgs, targets = next(train_loader)
         imgs, targets = imgs.to(device), targets.to(device)
         output = model(imgs)
+        print('output:')
+        print(output)
         train_loss = criterion(output, targets)
         train_loss.backward()
 
