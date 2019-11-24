@@ -60,7 +60,7 @@ class HALF_CIFAR10(Dataset):
                     entry = pickle.load(f, encoding='latin1')
                 self.data.append(entry['data'])
                 if 'labels' in entry:
-                    self.targets.extend(entry['labels'])
+                    self.targets.extend(entry['labels'] % 5)
                 else:
                     self.targets.extend(entry['fine_labels'])
 
