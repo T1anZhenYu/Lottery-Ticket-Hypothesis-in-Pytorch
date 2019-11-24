@@ -126,7 +126,7 @@ def main(args, ITE=0):
         optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
         criterion = nn.CrossEntropyLoss()  # Default was F.nll_loss
 
-        pbar = tqdm(range(args.end_iter))
+        pbar = tqdm(range(args.end_epoch))
         best_accuracy = 0
         for iter_ in pbar:
             # Frequency for Testing
@@ -137,7 +137,7 @@ def main(args, ITE=0):
             loss = train(model, train_loader, optimizer, criterion)
             if iter_ % args.print_freq == 0:
                 pbar.set_description(
-                    f'Train Epoch: {iter_}/{args.end_iter} Loss: {loss:.6f} Accuracy: \
+                    f'Train Epoch: {iter_}/{args.end_epoch} Loss: {loss:.6f} Accuracy: \
                         {accuracy:.2f}% Best Accuracy: {best_accuracy:.2f}%')
         print("stop training pruned network")
         exit()
@@ -170,8 +170,8 @@ def main(args, ITE=0):
     comp = np.zeros(ITERATION,float)
     bestacc = np.zeros(ITERATION,float)
     step = 0
-    all_loss = np.zeros(args.end_iter,float)
-    all_accuracy = np.zeros(args.end_iter,float)
+    all_loss = np.zeros(args.end_epoch,float)
+    all_accuracy = np.zeros(args.end_epoch,float)
 
 
     for _ite in range(args.start_iter, ITERATION):
@@ -194,7 +194,7 @@ def main(args, ITE=0):
         # Print the table of Nonzeros in each layer
         comp1 = utils.print_nonzeros(model)#comp1 is the percentage of nonzeros pramas
         comp[_ite] = comp1
-        pbar = tqdm(range(args.end_iter))
+        pbar = tqdm(range(args.end_epoch))
 
         for iter_ in pbar:
 
@@ -216,7 +216,7 @@ def main(args, ITE=0):
             # Frequency for Printing Accuracy and Loss
             if iter_ % args.print_freq == 0:
                 pbar.set_description(
-                    f'Train Epoch: {iter_}/{args.end_iter} Loss: {loss:.6f} Accuracy: \
+                    f'Train Epoch: {iter_}/{args.end_epoch} Loss: {loss:.6f} Accuracy: \
                         {accuracy:.2f}% Best Accuracy: {best_accuracy:.2f}%')
 
         writer.add_scalar('Accuracy/test', best_accuracy, comp1)
@@ -225,8 +225,8 @@ def main(args, ITE=0):
         # Plotting Loss (Training), Accuracy (Testing), Iteration Curve
         #NOTE Loss is computed for every iteration while Accuracy is computed only for every {args.valid_freq} iterations. Therefore Accuracy saved is constant during the uncomputed iterations.
         #NOTE Normalized the accuracy to [0,100] for ease of plotting.
-        plt.plot(np.arange(1,(args.end_iter)+1), 100*(all_loss - np.min(all_loss))/np.ptp(all_loss).astype(float), c="blue", label="Loss") 
-        plt.plot(np.arange(1,(args.end_iter)+1), all_accuracy, c="red", label="Accuracy") 
+        plt.plot(np.arange(1,(args.end_epoch)+1), 100*(all_loss - np.min(all_loss))/np.ptp(all_loss).astype(float), c="blue", label="Loss")
+        plt.plot(np.arange(1,(args.end_epoch)+1), all_accuracy, c="red", label="Accuracy")
         plt.title(f"Loss Vs Accuracy Vs Iterations ({args.dataset},{args.arch_type})") 
         plt.xlabel("Iterations") 
         plt.ylabel("Loss and Accuracy") 
@@ -250,8 +250,8 @@ def main(args, ITE=0):
         
         # Making variables into 0
         best_accuracy = 0
-        all_loss = np.zeros(args.end_iter,float)
-        all_accuracy = np.zeros(args.end_iter,float)
+        all_loss = np.zeros(args.end_epoch,float)
+        all_accuracy = np.zeros(args.end_epoch,float)
 
     # Dumping Values for Plotting
     utils.checkdir(f"{os.getcwd()}/dumps/lt/{args.arch_type}/{args.dataset}/")
@@ -457,7 +457,7 @@ if __name__=="__main__":
     parser.add_argument("--lr",default= 1.2e-3, type=float, help="Learning rate")
     parser.add_argument("--batch_size", default=60, type=int)
     parser.add_argument("--start_iter", default=0, type=int)
-    parser.add_argument("--end_iter", default=100, type=int)
+    parser.add_argument("--end_epoch", default=100, type=int)
     parser.add_argument("--print_freq", default=1, type=int)
     parser.add_argument("--valid_freq", default=1, type=int)
     parser.add_argument("--resume", action="store_true")
