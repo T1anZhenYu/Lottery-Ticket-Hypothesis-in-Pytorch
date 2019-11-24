@@ -119,10 +119,12 @@ def main(args, ITE=0):
         model = original_initialization(model,mask, initial_state_dict)
         comp1 = utils.print_nonzeros(model)
         print('comp1:',comp1)
-        print('model params')
+        print('model state_dict')
         print(model.state_dict())
         # print('after initialization, model params:')
         # print(model.state_dict())
+        print('model parameters')
+        print(model.parameters())
         optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
         criterion = nn.CrossEntropyLoss()  # Default was F.nll_loss
 
@@ -289,6 +291,8 @@ def train(model, train_loader, optimizer, criterion):
         print('target:')
         print(targets)
         train_loss = criterion(output, targets)
+        print('train_loss:')
+        print(train_loss)
         train_loss.backward()
 
         # Freezing Pruned weights by making their gradients Zero
