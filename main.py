@@ -190,6 +190,8 @@ def main(args, ITE=0):
                 step = 0
             else:
                 model = original_initialization(model,mask, initial_state_dict)
+            print('model parameters')
+            print(model.parameters())
             optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-4)
         print(f"\n--- Pruning Level [{ITE}:{_ite}/{ITERATION}]: ---")
 
