@@ -282,6 +282,8 @@ def train(model, train_loader, optimizer, criterion):
         #imgs, targets = next(train_loader)
         imgs, targets = imgs.to(device), targets.to(device)
         output = model(imgs)
+        print('input:')
+        print(imgs)
         print('output:')
         print(output)
         train_loss = criterion(output, targets)
