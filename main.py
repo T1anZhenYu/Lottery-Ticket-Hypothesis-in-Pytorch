@@ -109,8 +109,8 @@ def main(args, ITE=0):
         assert os.path.isfile(args.mask_path), "Error: no mask directory found!"
         with open(args.mask_path, 'rb') as fp:
             mask = pickle.load(fp)
-        print("in freeze, mask:")
-        print(mask[0])
+        # print("in freeze, mask:")
+        # print(mask[0])
 
 
         #train the pruned network over new dataset
@@ -118,13 +118,13 @@ def main(args, ITE=0):
         # print(model.state_dict())
         model = original_initialization(model,mask, initial_state_dict)
         comp1 = utils.print_nonzeros(model)
-        print('comp1:',comp1)
-        print('model state_dict')
-        print(model.state_dict())
+        # print('comp1:',comp1)
+        # print('model state_dict')
+        # print(model.state_dict())
         # print('after initialization, model params:')
         # print(model.state_dict())
-        print('model parameters')
-        print(model.parameters())
+        # print('model parameters')
+        # print(model.parameters())
         optimizer = torch.optim.Adam(model.parameters(),lr=args.lr, weight_decay=1e-4)
         criterion = nn.CrossEntropyLoss()  # Default was F.nll_loss
 
@@ -190,8 +190,8 @@ def main(args, ITE=0):
                 step = 0
             else:
                 model = original_initialization(model,mask, initial_state_dict)
-            print('model parameters')
-            print(model.parameters())
+            # print('model parameters')
+            # print(model.parameters())
             optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-4)
         print(f"\n--- Pruning Level [{ITE}:{_ite}/{ITERATION}]: ---")
 
@@ -248,8 +248,8 @@ def main(args, ITE=0):
         # Dumping mask
         utils.checkdir(f"{os.getcwd()}/dumps/lt/{args.arch_type}/{args.dataset}/")
         with open(f"{os.getcwd()}/dumps/lt/{args.arch_type}/{args.dataset}/{args.prune_type}_mask_{comp1}.pkl", 'wb') as fp:
-            print("mask is :")
-            print(mask[0])
+            # print("mask is :")
+            # print(mask[0])
             pickle.dump(mask, fp)
         
         # Making variables into 0
@@ -286,15 +286,7 @@ def train(model, train_loader, optimizer, criterion):
         #imgs, targets = next(train_loader)
         imgs, targets = imgs.to(device), targets.to(device)
         output = model(imgs)
-        print('input:')
-        print(imgs)
-        print('output:')
-        print(output)
-        print('target:')
-        print(targets)
         train_loss = criterion(output, targets)
-        print('train_loss:')
-        print(train_loss)
         train_loss.backward()
 
         # Freezing Pruned weights by making their gradients Zero
