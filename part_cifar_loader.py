@@ -116,14 +116,14 @@ class PART_CIFAR10(Dataset):
                     fine_tuen_file_name = np.append(fine_tuen_file_name,data['filenames'][i])
             new_dataset = {}
             new_dataset['labels'] = prune_label
-            new_dataset['data'] = prune_data
+            new_dataset['data'] = prune_data.reshape((-1,data['data'][0].shape[0],))
             new_dataset['filenames'] = prune_file_name
             utils.checkdir(os.path.join('parsed_data','prune_data'))
             with open(os.path.join('parsed_data','prune_data',item),'wb') as f:
                 pickle.dump(new_dataset, f, 0)
             new_dataset = {}
             new_dataset['labels'] = fine_tune_label
-            new_dataset['data'] = fine_tune_data
+            new_dataset['data'] = fine_tune_data.reshape((-1,data['data'][0].shape[0],))
             new_dataset['filenames'] = fine_tuen_file_name
             utils.checkdir(os.path.join('parsed_data','fine_tune_data'))
             with open(os.path.join('parsed_data','fine_tune_data',item),'wb') as f:
