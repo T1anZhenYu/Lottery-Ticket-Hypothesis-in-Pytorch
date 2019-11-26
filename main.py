@@ -21,7 +21,7 @@ import pickle
 
 # Custom Libraries
 import utils
-from half_cifar_loader import HALF_CIFAR10
+from part_cifar_loader import PART_CIFAR10
 # Tensorboard initialization
 writer = SummaryWriter()
 
@@ -44,17 +44,17 @@ def main(args, ITE=0):
         traindataset = datasets.CIFAR10('../data', train=True, download=True,transform=transform)
         testdataset = datasets.CIFAR10('../data', train=False, transform=transform)      
         from archs.cifar10 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
-    elif args.dataset == "first_cifar_5":
-        traindataset = HALF_CIFAR10('/content/drive/My Drive/prune/data/first_cifar_5',\
-                            train=True, download=True,transform=transform)
-        testdataset = HALF_CIFAR10('/content/drive/My Drive/prune/data/first_cifar_5', \
-                            train=False, transform=transform)
-        from archs.cifar5 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
-    elif args.dataset == "last_cifar_5":
-        traindataset = HALF_CIFAR10('/content/drive/My Drive/prune/data/last_cifar_5',\
-                            train=True, download=False,transform=transform)
-        testdataset = HALF_CIFAR10('/content/drive/My Drive/prune/data/last_cifar_5', \
-                            train=False, transform=transform)
+    elif args.dataset == "part_cifar_5":
+        traindataset = PART_CIFAR10('./',\
+                            train=True, download=True,transform=transform,
+                            prune_classes=args.prune_classes,
+                            fine_tune_classes=args.fine_tune_classes,
+                            prune_rate=args.prune_rate, fine_tune=args.fine_tune)
+        testdataset = PART_CIFAR10('./',\
+                            train=False, download=False,transform=transform,
+                            prune_classes=args.prune_classes,
+                            fine_tune_classes=args.fine_tune_classes,
+                            prune_rate=args.prune_rate, fine_tuen=args.fine_tune)
         from archs.cifar5 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
     elif args.dataset == "fashionmnist":
         traindataset = datasets.FashionMNIST('../data', train=True, download=True,transform=transform)
@@ -96,7 +96,7 @@ def main(args, ITE=0):
     else:
         print("\nWrong Model choice\n")
         exit()
-    if args.freeze:
+    if args.fine_tune:
         #load model
         model_path = args.initial_weight_path
         assert os.path.isfile(model_path), "Error: no checkpoint directory found!"
@@ -473,12 +473,15 @@ if __name__=="__main__":
     parser.add_argument("--prune_percent", default=10, type=int, help="Pruning percent")
     parser.add_argument("--prune_iterations", default=35, type=int,\
                         help="Pruning iterations count")
-    parser.add_argument("--freeze", default=False,help=\
+    parser.add_argument("--fine_tune", default=False,help=\
         "If freeze is True, then stop pruning, using the pruned network to train")
     parser.add_argument("--mask_path",type=str,\
                         help="load mask")
     parser.add_argument("--initial_weight_path",type=str,\
                         help="load initial weight")
+    parser.add_argument("--prune_classes",nargs='+', type=int)
+    parser.add_argument("--fine_tune_classes", nargs='+', type=int)
+    parser.add_argument('--prune_rate',default=1)
 
 
 
