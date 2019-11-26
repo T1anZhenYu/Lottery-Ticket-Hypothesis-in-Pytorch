@@ -117,6 +117,9 @@ class PART_CIFAR10(Dataset):
             data = pickle.load(f, encoding='latin1')
         size = len(data['labels'])
         iter_ = 0
+        filename = file_path.split('/')[-1]
+        print('filename is:',filename)
+        print('new file path:',os.path.join(self.root,'parsed_data','fine_tune_data',filename))
         if show:
             pbar = tqdm(range(size))
         else:
@@ -155,15 +158,15 @@ class PART_CIFAR10(Dataset):
         new_dataset['labels'] = total_prune_label
         new_dataset['data'] = total_prune_data.reshape((-1,data['data'][0].shape[0],))
         new_dataset['filenames'] = total_prune_file_name
-        utils.checkdir(file_path)
-        with open(file_path,'wb') as f:
+
+        with open(os.path.join(self.root,'parsed_data','fine_tune_data',filename),'wb') as f:
             pickle.dump(new_dataset, f, 0)
         new_dataset = {}
         new_dataset['labels'] = total_fine_tune_label
         new_dataset['data'] = total_fine_tune_data.reshape((-1,data['data'][0].shape[0],))
         new_dataset['filenames'] = total_fine_tuen_file_name
         utils.checkdir(os.path.join(self.root,'parsed_data','fine_tune_data'))
-        with open(os.path.join(self.root,'parsed_data','prune_data'),'wb') as f:
+        with open(os.path.join(self.root,'parsed_data','fine_tune_data',filename),'wb') as f:
             pickle.dump(new_dataset, f, 0)
         # data = {}
         # prune_label = np.array([])
