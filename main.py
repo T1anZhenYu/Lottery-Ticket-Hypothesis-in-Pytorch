@@ -54,7 +54,7 @@ def main(args, ITE=0):
                             train=False, download=False,transform=transform,
                             prune_classes=args.prune_classes,
                             fine_tune_classes=args.fine_tune_classes,
-                            prune_rate=args.prune_rate, fine_tuen=args.fine_tune)
+                            prune_rate=args.prune_rate, fine_tune=args.fine_tune)
         from archs.cifar5 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
     elif args.dataset == "fashionmnist":
         traindataset = datasets.FashionMNIST('../data', train=True, download=True,transform=transform)
