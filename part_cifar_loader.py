@@ -125,7 +125,7 @@ class PART_CIFAR10(Dataset):
         else:
             pbar = range(size)
         for i in pbar:
-            if i % 500 == 0:
+            if i % 300 == 0 or i == pbar-1:
                 total_prune_label = np.append(total_prune_label,prune_label)
                 total_prune_data = np.append(total_prune_data,prune_data)
                 total_prune_file_name = np.append(total_prune_file_name,prune_file_name)
