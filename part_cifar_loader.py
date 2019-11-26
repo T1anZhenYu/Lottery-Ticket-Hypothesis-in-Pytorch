@@ -14,7 +14,7 @@ else:
     import pickle
 import threading
 import time
-
+from tqdm import tqdm
 class PART_CIFAR10(Dataset):
     """`HALF_CIFAR10 <https://www.cs.toronto.edu/~kriz/cifar.html>`_ Dataset.
 
@@ -107,7 +107,8 @@ class PART_CIFAR10(Dataset):
             data = pickle.load(f, encoding='latin1')
         size = len(data['labels'])
         iter_ = 0
-        for i in range(size):
+        pbar = tqdm(range(size))
+        for i in pbar:
             if i % 100 == 0:
                 print(i)
             if data['labels'][i] in prune_classes and iter_ % prune_iter == 0:
