@@ -13,7 +13,7 @@ if sys.version_info[0] == 2:
 else:
     import pickle
 import threading
-
+import time
 
 class PART_CIFAR10(Dataset):
     """`HALF_CIFAR10 <https://www.cs.toronto.edu/~kriz/cifar.html>`_ Dataset.
@@ -62,6 +62,7 @@ class PART_CIFAR10(Dataset):
                     file_path = os.path.join(base_path,item)
                     threads.append(threading.Thread(target = self.Paser_data,\
                             args = (prune_classes, fine_tune_classes, prune_rate,file_path)))
+                    time.sleep(1)
                     threads[-1].start()
                 threads[-1].join()
 
