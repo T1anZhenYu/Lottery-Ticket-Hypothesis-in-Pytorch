@@ -63,7 +63,7 @@ class PART_CIFAR10(Dataset):
                     threads.append(threading.Thread(target = self.Paser_data,\
                             args = (prune_classes, fine_tune_classes, prune_rate,file_path)))
                     threads[-1].start()
-                    threads[-1].join()
+                threads[-1].join()
 
 
         if self.train:
