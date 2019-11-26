@@ -481,7 +481,7 @@ if __name__=="__main__":
                         help="load initial weight")
     parser.add_argument("--prune_classes",nargs='+', type=int)
     parser.add_argument("--fine_tune_classes", nargs='+', type=int)
-    parser.add_argument('--prune_rate',default=1)
+    parser.add_argument('--prune_rate',default=1,type=float)
 
 
 
