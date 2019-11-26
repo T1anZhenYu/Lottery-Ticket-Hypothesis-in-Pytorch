@@ -12,7 +12,7 @@ if sys.version_info[0] == 2:
     import cPickle as pickle
 else:
     import pickle
-
+import threading
 
 
 class PART_CIFAR10(Dataset):
@@ -52,7 +52,20 @@ class PART_CIFAR10(Dataset):
             datasets.CIFAR10(os.path.join(self.root,'origin_data'),\
                              train=True, download=True, transform=transform)
             if not os.path.exists(os.path.join(self.root,'parsed_data','fine_tune_data')):
-                self.Paser_data(prune_classes, fine_tune_classes, prune_rate)
+                print('in pasering')
+                print("prune_classes:", prune_classes)
+                print("fine_tune_classes:", fine_tune_classes)
+                base_path = os.path.join(self.root, 'origin_data/cifar-10-batches-py')
+                total_list = self.train_list + self.test_list
+                threads = []
+                for item in total_list:
+                    file_path = os.path.join(base_path,item)
+                    threads.append(threading.Thread(target = self.Paser_data,\
+                            args = (prune_classes, fine_tune_classes, prune_rate,file_path)))
+                for i in range(len(threads)):
+                    threads[i].join()
+
+
         if self.train:
             downloaded_list = self.train_list
         else:
@@ -81,62 +94,55 @@ class PART_CIFAR10(Dataset):
         self.data = np.vstack(self.data).reshape(-1, 3, 32, 32)
         self.data = self.data.transpose((0, 2, 3, 1))  # convert to HWC
 
-    def Paser_data(self,prune_classes, fine_tune_classes, prune_rate):
-        print('in pasering')
-        print("prune_classes:",prune_classes)
-        print("fine_tune_classes:",fine_tune_classes)
-        base_path = os.path.join(self.root,'origin_data/cifar-10-batches-py')
-        total_list = self.train_list + self.test_list
-        for item in total_list:
-            prune_label = np.array([])
-            prune_data = np.array([])
-            prune_file_name = np.array([])
-            fine_tune_label = np.array([])
-            fine_tune_data = np.array([])
-            fine_tuen_file_name = np.array([])
-            prune_iter = int(1 / prune_rate)
-            with open(os.path.join(base_path,item),'rb') as f:
-                data = pickle.load(f, encoding='latin1')
-            size = len(data['labels'])
-            iter_ = 0
-            for i in range(size):
-                if data['labels'][i] in prune_classes and iter_ % prune_iter == 0:
-                    iter_ += 1
-                    prune_label = np.append(prune_label,data['labels'][i])
-                    prune_data = np.append(prune_data,data['data'][i])
-                    prune_file_name = np.append(prune_file_name,data['filenames'][i])
-                if data['labels'][i] in fine_tune_classes and data['labels'][i] in prune_classes\
-                        and i % prune_iter != 0:
-                    iter_ += 1
-                    fine_tune_label = np.append(fine_tune_label,data['labels'][i])
-                    fine_tune_data = np.append(fine_tune_data,data['data'][i])
-                    fine_tuen_file_name = np.append(fine_tuen_file_name,data['filenames'][i])
-                if data['labels'][i] in fine_tune_classes and data['labels'][i] not in prune_classes:
-                    fine_tune_label = np.append(fine_tune_label,data['labels'][i])
-                    fine_tune_data = np.append(fine_tune_data,data['data'][i])
-                    fine_tuen_file_name = np.append(fine_tuen_file_name,data['filenames'][i])
-            new_dataset = {}
-            new_dataset['labels'] = prune_label
-            new_dataset['data'] = prune_data.reshape((-1,data['data'][0].shape[0],))
-            new_dataset['filenames'] = prune_file_name
-            utils.checkdir(os.path.join(self.root,'parsed_data','prune_data'))
-            with open(os.path.join(self.root,'parsed_data','prune_data'),'wb') as f:
-                pickle.dump(new_dataset, f, 0)
-            new_dataset = {}
-            new_dataset['labels'] = fine_tune_label
-            new_dataset['data'] = fine_tune_data.reshape((-1,data['data'][0].shape[0],))
-            new_dataset['filenames'] = fine_tuen_file_name
-            utils.checkdir(os.path.join(self.root,'parsed_data','fine_tune_data'))
-            with open(os.path.join(self.root,'parsed_data','prune_data'),'wb') as f:
-                pickle.dump(new_dataset, f, 0)
-            print(item)
-        data = {}
+    def Paser_data(self,prune_classes, fine_tune_classes, prune_rate,file_path):
         prune_label = np.array([])
         prune_data = np.array([])
         prune_file_name = np.array([])
         fine_tune_label = np.array([])
         fine_tune_data = np.array([])
         fine_tuen_file_name = np.array([])
+        prune_iter = int(1 / prune_rate)
+        with open(file_path,'rb') as f:
+            data = pickle.load(f, encoding='latin1')
+        size = len(data['labels'])
+        iter_ = 0
+        for i in range(size):
+            if data['labels'][i] in prune_classes and iter_ % prune_iter == 0:
+                iter_ += 1
+                prune_label = np.append(prune_label,data['labels'][i])
+                prune_data = np.append(prune_data,data['data'][i])
+                prune_file_name = np.append(prune_file_name,data['filenames'][i])
+            if data['labels'][i] in fine_tune_classes and data['labels'][i] in prune_classes\
+                    and i % prune_iter != 0:
+                iter_ += 1
+                fine_tune_label = np.append(fine_tune_label,data['labels'][i])
+                fine_tune_data = np.append(fine_tune_data,data['data'][i])
+                fine_tuen_file_name = np.append(fine_tuen_file_name,data['filenames'][i])
+            if data['labels'][i] in fine_tune_classes and data['labels'][i] not in prune_classes:
+                fine_tune_label = np.append(fine_tune_label,data['labels'][i])
+                fine_tune_data = np.append(fine_tune_data,data['data'][i])
+                fine_tuen_file_name = np.append(fine_tuen_file_name,data['filenames'][i])
+        new_dataset = {}
+        new_dataset['labels'] = prune_label
+        new_dataset['data'] = prune_data.reshape((-1,data['data'][0].shape[0],))
+        new_dataset['filenames'] = prune_file_name
+        utils.checkdir(os.path.join(self.root,'parsed_data','prune_data'))
+        with open(os.path.join(self.root,'parsed_data','prune_data'),'wb') as f:
+            pickle.dump(new_dataset, f, 0)
+        new_dataset = {}
+        new_dataset['labels'] = fine_tune_label
+        new_dataset['data'] = fine_tune_data.reshape((-1,data['data'][0].shape[0],))
+        new_dataset['filenames'] = fine_tuen_file_name
+        utils.checkdir(os.path.join(self.root,'parsed_data','fine_tune_data'))
+        with open(os.path.join(self.root,'parsed_data','prune_data'),'wb') as f:
+            pickle.dump(new_dataset, f, 0)
+        # data = {}
+        # prune_label = np.array([])
+        # prune_data = np.array([])
+        # prune_file_name = np.array([])
+        # fine_tune_label = np.array([])
+        # fine_tune_data = np.array([])
+        # fine_tuen_file_name = np.array([])
     def __getitem__(self, index):
         """
         Args:
