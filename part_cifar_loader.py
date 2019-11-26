@@ -109,8 +109,8 @@ class PART_CIFAR10(Dataset):
         iter_ = 0
         pbar = tqdm(range(size))
         for i in pbar:
-            if i % 100 == 0:
-                print(i)
+            # if i % 100 == 0:
+            #     print(i)
             if data['labels'][i] in prune_classes and iter_ % prune_iter == 0:
                 iter_ += 1
                 prune_label = np.append(prune_label,data['labels'][i])
