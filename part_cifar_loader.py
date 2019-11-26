@@ -130,8 +130,8 @@ class PART_CIFAR10(Dataset):
         new_dataset['labels'] = prune_label
         new_dataset['data'] = prune_data.reshape((-1,data['data'][0].shape[0],))
         new_dataset['filenames'] = prune_file_name
-        utils.checkdir(os.path.join(self.root,'parsed_data','prune_data'))
-        with open(os.path.join(self.root,'parsed_data','prune_data'),'wb') as f:
+        utils.checkdir(file_path)
+        with open(file_path,'wb') as f:
             pickle.dump(new_dataset, f, 0)
         new_dataset = {}
         new_dataset['labels'] = fine_tune_label
