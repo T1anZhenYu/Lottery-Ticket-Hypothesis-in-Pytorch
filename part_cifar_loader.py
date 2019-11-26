@@ -82,7 +82,8 @@ class PART_CIFAR10(Dataset):
 
     def Paser_data(self,prune_classes, fine_tune_classes, prune_rate):
         print('in pasering')
-        print
+        print("prune_classes:",prune_classes)
+        print("fine_tune_classes:",fine_tune_classes)
         base_path = os.path.join(self.root,'origin_data/cifar-10-batches-py')
         total_list = self.train_list + self.test_list
         for item in total_list:
