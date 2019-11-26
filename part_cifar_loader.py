@@ -106,6 +106,12 @@ class PART_CIFAR10(Dataset):
         fine_tune_label = np.array([])
         fine_tune_data = np.array([])
         fine_tuen_file_name = np.array([])
+        total_prune_label = np.array([])
+        total_prune_data = np.array([])
+        total_prune_file_name = np.array([])
+        total_fine_tune_label = np.array([])
+        total_fine_tune_data = np.array([])
+        total_fine_tuen_file_name = np.array([])
         prune_iter = int(1 / prune_rate)
         with open(file_path,'rb') as f:
             data = pickle.load(f, encoding='latin1')
@@ -116,7 +122,19 @@ class PART_CIFAR10(Dataset):
         else:
             pbar = range(size)
         for i in pbar:
-            # if i % 100 == 0:
+            if i % 500 == 0:
+                total_prune_label = np.append(total_prune_label,prune_label)
+                total_prune_data = np.append(total_prune_data,prune_data)
+                total_prune_file_name = np.append(total_prune_file_name,prune_file_name)
+                total_fine_tune_label = np.append(total_fine_tune_label,fine_tune_label)
+                total_fine_tune_data = np.append(total_fine_tune_data,fine_tune_data)
+                total_fine_tuen_file_name = np.append(total_fine_tuen_file_name,fine_tuen_file_name)
+                prune_label = np.array([])
+                prune_data = np.array([])
+                prune_file_name = np.array([])
+                fine_tune_label = np.array([])
+                fine_tune_data = np.array([])
+                fine_tuen_file_name = np.array([])
             #     print(i)
             if data['labels'][i] in prune_classes and iter_ % prune_iter == 0:
                 iter_ += 1
@@ -134,16 +152,16 @@ class PART_CIFAR10(Dataset):
                 fine_tune_data = np.append(fine_tune_data,data['data'][i])
                 fine_tuen_file_name = np.append(fine_tuen_file_name,data['filenames'][i])
         new_dataset = {}
-        new_dataset['labels'] = prune_label
-        new_dataset['data'] = prune_data.reshape((-1,data['data'][0].shape[0],))
-        new_dataset['filenames'] = prune_file_name
+        new_dataset['labels'] = total_prune_label
+        new_dataset['data'] = total_prune_data.reshape((-1,data['data'][0].shape[0],))
+        new_dataset['filenames'] = total_prune_file_name
         utils.checkdir(file_path)
         with open(file_path,'wb') as f:
             pickle.dump(new_dataset, f, 0)
         new_dataset = {}
-        new_dataset['labels'] = fine_tune_label
-        new_dataset['data'] = fine_tune_data.reshape((-1,data['data'][0].shape[0],))
-        new_dataset['filenames'] = fine_tuen_file_name
+        new_dataset['labels'] = total_fine_tune_label
+        new_dataset['data'] = total_fine_tune_data.reshape((-1,data['data'][0].shape[0],))
+        new_dataset['filenames'] = total_fine_tuen_file_name
         utils.checkdir(os.path.join(self.root,'parsed_data','fine_tune_data'))
         with open(os.path.join(self.root,'parsed_data','prune_data'),'wb') as f:
             pickle.dump(new_dataset, f, 0)
