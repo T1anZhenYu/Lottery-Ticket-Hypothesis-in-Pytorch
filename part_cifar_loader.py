@@ -125,7 +125,7 @@ class PART_CIFAR10(Dataset):
         else:
             pbar = range(size)
         for i in pbar:
-            if i % 300 == 0 or i == pbar-1:
+            if i % 300 == 0:
                 total_prune_label = np.append(total_prune_label,prune_label)
                 total_prune_data = np.append(total_prune_data,prune_data)
                 total_prune_file_name = np.append(total_prune_file_name,prune_file_name)
@@ -154,6 +154,19 @@ class PART_CIFAR10(Dataset):
                 fine_tune_label = np.append(fine_tune_label,data['labels'][i])
                 fine_tune_data = np.append(fine_tune_data,data['data'][i])
                 fine_tuen_file_name = np.append(fine_tuen_file_name,data['filenames'][i])
+
+        total_prune_label = np.append(total_prune_label,prune_label)
+        total_prune_data = np.append(total_prune_data,prune_data)
+        total_prune_file_name = np.append(total_prune_file_name,prune_file_name)
+        total_fine_tune_label = np.append(total_fine_tune_label,fine_tune_label)
+        total_fine_tune_data = np.append(total_fine_tune_data,fine_tune_data)
+        total_fine_tuen_file_name = np.append(total_fine_tuen_file_name,fine_tuen_file_name)
+        prune_label = np.array([])
+        prune_data = np.array([])
+        prune_file_name = np.array([])
+        fine_tune_label = np.array([])
+        fine_tune_data = np.array([])
+        fine_tuen_file_name = np.array([])
         new_dataset = {}
         new_dataset['labels'] = total_prune_label
         new_dataset['data'] = total_prune_data.reshape((-1,data['data'][0].shape[0],))
