@@ -62,6 +62,7 @@ class PART_CIFAR10(Dataset):
                     file_path = os.path.join(base_path,item)
                     threads.append(threading.Thread(target = self.Paser_data,\
                             args = (prune_classes, fine_tune_classes, prune_rate,file_path)))
+                    threads[-1].start()
                 for i in range(len(threads)):
                     threads[i].join()
 
