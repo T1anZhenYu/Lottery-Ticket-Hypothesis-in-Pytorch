@@ -63,8 +63,7 @@ class PART_CIFAR10(Dataset):
                     threads.append(threading.Thread(target = self.Paser_data,\
                             args = (prune_classes, fine_tune_classes, prune_rate,file_path)))
                     threads[-1].start()
-                for i in range(len(threads)):
-                    threads[i].join()
+                    threads[-1].join()
 
 
         if self.train:
@@ -108,6 +107,8 @@ class PART_CIFAR10(Dataset):
         size = len(data['labels'])
         iter_ = 0
         for i in range(size):
+            if i % 100 == 0:
+                print(i)
             if data['labels'][i] in prune_classes and iter_ % prune_iter == 0:
                 iter_ += 1
                 prune_label = np.append(prune_label,data['labels'][i])
