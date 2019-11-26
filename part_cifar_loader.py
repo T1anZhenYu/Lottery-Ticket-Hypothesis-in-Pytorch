@@ -59,9 +59,13 @@ class PART_CIFAR10(Dataset):
                 total_list = self.train_list + self.test_list
                 threads = []
                 for item in total_list:
+                    if item == 'test_batch':
+                        show = True
+                    else:
+                        show = False
                     file_path = os.path.join(base_path,item)
                     threads.append(threading.Thread(target = self.Paser_data,\
-                            args = (prune_classes, fine_tune_classes, prune_rate,file_path)))
+                            args = (prune_classes, fine_tune_classes, prune_rate,file_path,show)))
                     time.sleep(1)
                     threads[-1].start()
                 threads[-1].join()
@@ -95,7 +99,7 @@ class PART_CIFAR10(Dataset):
         self.data = np.vstack(self.data).reshape(-1, 3, 32, 32)
         self.data = self.data.transpose((0, 2, 3, 1))  # convert to HWC
 
-    def Paser_data(self,prune_classes, fine_tune_classes, prune_rate,file_path):
+    def Paser_data(self,prune_classes, fine_tune_classes, prune_rate,file_path,show=False):
         prune_label = np.array([])
         prune_data = np.array([])
         prune_file_name = np.array([])
@@ -107,7 +111,10 @@ class PART_CIFAR10(Dataset):
             data = pickle.load(f, encoding='latin1')
         size = len(data['labels'])
         iter_ = 0
-        pbar = tqdm(range(size))
+        if show:
+            pbar = tqdm(range(size))
+        else:
+            pbar = range(size)
         for i in pbar:
             # if i % 100 == 0:
             #     print(i)
