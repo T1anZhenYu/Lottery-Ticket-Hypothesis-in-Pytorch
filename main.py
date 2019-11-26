@@ -44,7 +44,7 @@ def main(args, ITE=0):
         traindataset = datasets.CIFAR10('../data', train=True, download=True,transform=transform)
         testdataset = datasets.CIFAR10('../data', train=False, transform=transform)      
         from archs.cifar10 import AlexNet, LeNet5, fc1, vgg, resnet, densenet
-    elif args.dataset == "part_cifar_5":
+    elif args.dataset == "part_cifar10":
         traindataset = PART_CIFAR10('./',\
                             train=True, download=True,transform=transform,
                             prune_classes=args.prune_classes,
@@ -69,6 +69,7 @@ def main(args, ITE=0):
     # If you want to add extra datasets paste here
 
     else:
+        print('daset choice:',args.dataset)
         print("\nWrong Dataset choice \n")
         exit()
 
@@ -466,15 +467,14 @@ if __name__=="__main__":
     parser.add_argument("--prune_type", default="lt", type=str, help="lt | reinit")
     parser.add_argument("--gpu", default="0", type=str)
     parser.add_argument("--dataset", default="mnist", type=str, \
-                        help="mnist | cifar10 | fashionmnist | cifar100 | first_cifar_5 \
-                        | last_cifar_5")
+                        help="mnist | cifar10 | fashionmnist | cifar100 | part_cifar10")
     parser.add_argument("--arch_type", default="fc1", type=str, \
                         help="fc1 | lenet5 | alexnet | vgg16 | resnet18 | densenet121")
     parser.add_argument("--prune_percent", default=10, type=int, help="Pruning percent")
     parser.add_argument("--prune_iterations", default=35, type=int,\
                         help="Pruning iterations count")
     parser.add_argument("--fine_tune", default=False,help=\
-        "If freeze is True, then stop pruning, using the pruned network to train")
+        "If fine_tune is True, then stop pruning, using the pruned network to train")
     parser.add_argument("--mask_path",type=str,\
                         help="load mask")
     parser.add_argument("--initial_weight_path",type=str,\

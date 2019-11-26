@@ -62,7 +62,7 @@ class PART_CIFAR10(Dataset):
         if not self.fine_tune:
             datapath = os.path.join(self.root, 'parsed_data', 'prune_data')
         else:
-            datapath = os.path.join(self.root, 'parsed_data','fine_tune_data')
+            datapath = os.path.join(self.root, 'parsed_data', 'fine_tune_data')
         # now load the picked numpy arrays
         for file_name in downloaded_list:
             file_path = os.path.join(datapath,  file_name)
@@ -81,6 +81,8 @@ class PART_CIFAR10(Dataset):
         self.data = self.data.transpose((0, 2, 3, 1))  # convert to HWC
 
     def Paser_data(self,prune_classes, fine_tune_classes, prune_rate):
+        print('in pasering')
+        print
         base_path = os.path.join(self.root,'origin_data/cifar-10-batches-py')
         total_list = self.train_list + self.test_list
         for item in total_list:
