@@ -128,6 +128,7 @@ class PART_CIFAR10(Dataset):
             utils.checkdir(os.path.join('parsed_data','fine_tune_data'))
             with open(os.path.join('parsed_data','fine_tune_data',item),'wb') as f:
                 pickle.dump(new_dataset, f, 0)
+            print(item)
         data = {}
         prune_label = np.array([])
         prune_data = np.array([])
